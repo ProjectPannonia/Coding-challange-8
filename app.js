@@ -4,12 +4,20 @@ class Town {
         this.name = name;
         this.parks = [];
         this.streets = [];
+        this.parksAvarageAge = calcParkAvAge();
     }
     addNewPark(parkObj) {
         this.parks.push(parkObj);
     }
     addNewStreet(streetObj) {
         this.streets.push(streetObj);
+    }
+    calcParkAvAge() {
+        let sum = 0;
+        let count = this.parks.length;
+        for(let i = 0; i < this.parks.length; i++) {
+            sum += this.parks[i].
+        }
     }
     parksReport() {
         let numberOfParks = this.parks.length;
@@ -38,8 +46,9 @@ class Park extends TownElement {
         this.numberOfTrees = numberOfTrees;
         this.parkArea = parkArea;
     }
-    treeDensity() {
-        return `Park name: ${this.name} `
+    calcTreeDensity() {
+        let treeDensity = this.numberOfTrees / this.parkArea;
+        return `${this.name} park has a tree density of ${treeDensity} trees per square km.`;
     }
 }
 class Street extends TownElement {
