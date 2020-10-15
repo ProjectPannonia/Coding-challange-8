@@ -1,53 +1,3 @@
-class Town {
-
-    constructor(name) {
-        this.name = name;
-        this.parks = [];
-        this.streets = [];
-        //this.parksAvarageAge = parksAvgAge();
-    }
-
-    addNewPark(parkObj) {
-        this.parks.push(parkObj);
-    }
-
-    addNewStreet(streetObj) {
-        this.streets.push(streetObj);
-    }
-
-    parksAvgAge() {
-        let avarageAge = 0;
-        let sum = 0;
-        let numberOfParks = this.parks.length;
-
-        if(sum !== 0) {
-            
-            for(let i = 0; i < this.parks.length; i++) {
-                sum += this.parks[i].age;
-            }
-            avarageAge = sum / numberOfParks;
-        }
-
-        return `Our ${numberOfParks} parks have an avarage age of ${avarageAge} years.`;
-    }
-    parksReport() {
-        let numberOfParks = this.parks.length;
-        let parksAvarageAge = parksAvarageAge();
-        console.log('-----PARKS REPORT-----');
-
-    }
-    streetsReport() {
-        let numberOfStreets = this.streets.length;
-        console.log('-----STREETS REPORT-----');
-    }
-    endOfYearReport() {
-        this.parksReport();
-        this.streetsReport();
-    }
-}
-
-
-
 class TownElement {
     constructor(name, yearOfBuilt) {
         this.name = name;
@@ -65,22 +15,68 @@ class Park extends TownElement {
     }
 
     calcTreeDensity() {
-        let treeDensity = this.numberOfTrees / this.parkArea;
-        return `${this.name} park has a tree density of ${treeDensity} trees per square km.`;
+        let treeDensity = this.parkArea / this.numberOfTrees;
+        console.log(`${this.name} park has a tree density of ${treeDensity} trees per square km.`);
     }
 }
 
 class Street extends TownElement {
-    constructor(name, yearOfBuilt, length, sizeClassification = 'normal') {
+    constructor(name, yearOfBuilt, length, size = 3) {
         super(name, yearOfBuilt);
         this.length = length;
-        this.sizeClassification = sizeClassification;
+        this.size = size;
+    }
+
+    classifyStreet() {
+        const classification = new Map();
+        classification.set(1, 'tiny');
+        classification.set(2, 'small');
+        classification.set(3, 'normal');
+        classification.set(4, 'big');
+        classification.set(5, 'huge');
+
+        console.log(`${this.name}, build in ${this.yearOfBuilt}, is a ${classification.get(this.size)} street.`);
     }
 }
 
-let town1 = new Town('Bszh');
-//console.log('New empty town: ' + town1);
-let park1 = new Park('P1', 1989, 1900, 200);
 
-town1.addNewPark(park1);
-console.log('Town after one park added: ' + town1);
+const allParks = [new Park('Green Park', 1987, 0.2, 215), new Park('National Park', 1894, 2.9, 3541), new Park('Oak Park', 1953, 0.4, 949)];
+
+const allStreets = [new Street('Ocean Avenue', 1999, 1.1, 4), new Street('Evergreen Street', 2008, 2.7, 2), new Street('4th Street', 2015, 0.8), new Street('Sunset Boulevard', 1982, 2.5, 5)];
+
+function calc(arr) {
+
+    const sum = arr.reduce((prev, curr, index) => prev + curr, 0);
+     
+    return [sum, sum / arr.length];
+
+}
+
+function reportParks(p) {
+
+    console.log('----PARKS REPORT----');
+
+    // Density
+    p.forEach(el => el.calcTreeDensity());
+
+    // Avarage age
+    const ages = p.map(el => new Date().getFullYear() - el.yearOfBuilt);
+    const [totalAge, avgAge] = calc(ages);
+    console.log(`Our ${p.length} parks have an avarage of ${avgAge} years.`);
+
+    // Which park  has more than 1000 trees
+    const i = p.map(el => el.numberOfTrees).findIndex(el => el >= 1000);
+    console.log(`${p[i].name} has more than 1000 trees.`);
+}
+
+function reportStreets(s) {
+    console.log('----STREETS REPORT----');
+
+    const [totalLength, avgLength] = calc(s.map(el  => el.length));
+    console.log(`Our ${s.length} streets have a total length of ${totalLength} km, with  an avarage of f${avgLength} km.`);
+
+    s.forEach(el => el.classifyStreet());
+}
+
+reportParks(allParks);
+reportStreets(allStreets);
